@@ -10,29 +10,96 @@ function fetchData(url) {
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      digimons = data;
-      displayData(digimons);
+      const newData = setType(data.slice(0, 30));
+      digimons = newData;
+      displayData(newData);
       addClickEvents();
     })
     .catch((error) => console.error("Error fetching data:", error));
 }
 
+function setType(data) {
+  const arrTypes = ["Novice", "Amateur", "Intermediate", "Advanced", "Expert"];
+  return data.map((item) => {
+    const randomIndex = Math.floor(Math.random() * arrTypes.length);
+    return { ...item, type: arrTypes[randomIndex] };
+  });
+}
+
 function displayData(digimonsData) {
   const collectionContainer = document.getElementById("collection");
+  const favoritesContainer = document.getElementById("favorites");
+  let countContainer = document.getElementById("count-container");
+
   if (!Array.isArray(digimonsData) || digimonsData.length === 0) {
     console.error("No digimons to display.");
     return;
   }
+
   collectionContainer.innerHTML = "";
+  favoritesContainer.innerHTML = "";
+
   digimonsData.slice(0, 30).forEach((digimon) => {
     const digimonHTML = createDigimonHTML(digimon);
     collectionContainer.appendChild(digimonHTML);
   });
+
+  favorites.forEach((favorite) => {
+    const favoriteHTML = createDigimonHTML(favorite);
+    favoritesContainer.appendChild(favoriteHTML);
+  });
+
+  if (!countContainer) {
+    countContainer = document.createElement("div");
+    countContainer.id = "count-container";
+    collectionContainer.parentElement.insertBefore(
+      countContainer,
+      favoritesContainer,
+    );
+  }
+
+  updateCount();
+}
+
+function updateCount() {
+  const countContainer = document.getElementById("count-container");
+  if (!countContainer) return;
+
+  const count = countByType();
+  countContainer.innerHTML = `
+    <p>Count by Level:</p>
+    <ul>
+      <li>Novice: ${count.Novice}</li>
+      <li>Amateur: ${count.Amateur}</li>
+      <li>Intermediate: ${count.Intermediate}</li>
+      <li>Advanced: ${count.Advanced}</li>
+      <li>Expert: ${count.Expert}</li>
+    </ul>
+  `;
+}
+
+function countByType() {
+  const count = {
+    Novice: 0,
+    Amateur: 0,
+    Intermediate: 0,
+    Advanced: 0,
+    Expert: 0,
+  };
+
+  if (digimons) {
+    digimons.forEach((digimon) => {
+      count[digimon.type]++;
+    });
+  }
+
+  return count;
 }
 
 function createDigimonHTML(digimon) {
   const digimonHTML = document.createElement("div");
   digimonHTML.classList.add("digimon");
+  digimonHTML.id = digimon.name;
   digimonHTML.innerHTML = `
     <h3>${digimon.name}</h3>
     <img src="${digimon.img}" alt="${digimon.name}">

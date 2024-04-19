@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  list-style-type: none;
 }
 
 body {
@@ -28,7 +29,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  justify-content: space-evenly;
+  justify-content: space-around;
 }
 
 h3 {
@@ -40,6 +41,7 @@ h3 {
 
 .collection-container,
 .favorites-container {
+  margin-left: 50px;
   background-color: #734392;
   border-radius: 5px;
   padding: 20px;
@@ -102,4 +104,18 @@ h3 {
   left: 3.5rem;
   transform: translateY(-50%);
   z-index: 9999;
+}
+
+#count-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 2rem;
+  flex-wrap: nowrap;
+  font-size: 14px;
+  font-weight: 400;
+  color: #c429d1;
+  text-align: left;
+  justify-content: space-evenly;
+  position: fixed;
+  margin-left: 12px;
 }
